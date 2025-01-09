@@ -16,6 +16,7 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'role' => 'required|string|exists:roles,name',
         ]);
 
         $user = User::create([
@@ -26,7 +27,9 @@ class AuthController extends Controller
        
         // $token = $user->createToken($request->email)
         // Assign default role 'user'
-        $user->roles()->attach(Role::where('name', 'customer')->first());
+        $role = Role::where('name', $request->role)->first();
+        $user->roles()->attach($role);
+        // $user->roles()->attach(Role::where('name', 'customer')->first());
 
         return response()->json(['message' => 'User registered successfully'], 201);
     }
@@ -48,8 +51,13 @@ class AuthController extends Controller
     }
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        $user = Auth::guard('sanctum')->user();
 
-        return response()->json(['message' => 'Logged out successfully'], 200);
+        if ($user) {
+            $user->tokens()->delete();
+            return response()->json(['message' => 'Logged out successfully'], 200);
+        }
+
+        return response()->json(['message' => 'No authenticated user'], 401);
     }
 }
