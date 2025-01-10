@@ -44,7 +44,14 @@ const ProductList: React.FC<ProductListProps> = ({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
           >
-            <ProductCard product={product} />
+            <ProductCard
+              product={{
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image_url: product.images[0].image_url,
+              }}
+            />
           </motion.div>
         ))}
       </div>

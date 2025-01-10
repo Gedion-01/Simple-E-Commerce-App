@@ -24,7 +24,6 @@ export async function getProducts({
   productsPerPage = 12,
 }: GetProductsParams): Promise<PaginatedProducts> {
   try {
-    console.log(selectedCategories);
     const response = await api.get("/products", {
       params: {
         search: searchTerm,
@@ -38,6 +37,37 @@ export async function getProducts({
     return response.data;
   } catch (error) {
     console.error("Error fetching products", error);
+    throw error;
+  }
+}
+
+export async function getProduct(id: number) {
+  try {
+    const response = await api.get(`/products/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching product", error);
+    throw error;
+  }
+}
+
+export async function getRelatedProducts(id: number) {
+  try {
+    const response = await api.get(`/products/${id}/related`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching related products", error);
+    throw error;
+  }
+}
+
+export async function getFeaturedProducts() {
+  try {
+    const response = await api.get("/products/featured");
+    console.log("featured products", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching featured products", error);
     throw error;
   }
 }

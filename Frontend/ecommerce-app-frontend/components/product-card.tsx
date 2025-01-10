@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 interface Product {
   id: number;
   name: string;
-  price: number;
-  image: string;
+  price: string;
+  image_url: string;
 }
 
 interface ProductCardProps {
@@ -22,7 +22,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     >
       <Link href={`/product/${product.id}`}>
         <Image
-          src={product.image}
+          src={product.image_url}
           alt={product.name}
           width={300}
           height={200}

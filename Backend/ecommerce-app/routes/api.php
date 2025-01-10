@@ -12,8 +12,11 @@ Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanct
 
 // Public routes for viewing products
 Route::get('products', [ProductController::class, 'index']);
-Route::get('products/{id}', [ProductController::class, 'show']);
+Route::get('products/featured', [ProductController::class, 'getFeaturedProducts']);
 Route::get('products/search', [ProductController::class, 'search']);
+Route::get('products/{id}', [ProductController::class, 'show']);
+Route::get('products/{id}/related', [ProductController::class, 'getRelatedProducts']);
+
 
 // Protected routes for managing products
 Route::group(['middleware' => ['auth:sanctum']], function () {

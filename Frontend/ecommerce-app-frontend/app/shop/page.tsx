@@ -13,13 +13,7 @@ const predefinedCategories = [
 ];
 
 interface ShopPageProps {
-  products: PaginatedProducts;
-  categories: string[];
-  searchTerm: string;
-  selectedCategories: string[];
-  priceRange: number[];
-  currentPage: number;
-  productsPerPage: number;
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 async function fetchProducts({
@@ -44,22 +38,17 @@ async function fetchProducts({
   });
 }
 
-export default async function ShopPage({
-  searchTerm = "",
-  categories = predefinedCategories,
-  selectedCategories = [],
-  priceRange = [0, 2000],
-  currentPage = 1,
-  productsPerPage = 12,
-}: Partial<ShopPageProps>) {
-  console.log("ShopPageProps", {
-    searchTerm,
-    categories,
-    selectedCategories,
-    priceRange,
-    currentPage,
-    productsPerPage,
-  });
+export default async function ShopPage({ searchParams }: ShopPageProps) {
+  const searchTerm = (searchParams.search as string) || "";
+  const categories = predefinedCategories;
+  const selectedCategories = searchParams.categories
+    ? (searchParams.categories as string).split(",")
+    : [];
+  const minPrice = parseInt((searchParams.minPrice as string) || "0", 10);
+  const maxPrice = parseInt((searchParams.maxPrice as string) || "2000", 10);
+  const priceRange = [minPrice, maxPrice];
+  const currentPage = parseInt((searchParams.page as string) || "1", 10);
+  const productsPerPage = 12;
 
   let products: PaginatedProducts | null = null;
   try {
