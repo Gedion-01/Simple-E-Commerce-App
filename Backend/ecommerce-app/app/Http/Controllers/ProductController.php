@@ -9,11 +9,66 @@ use App\Models\ProductImage;
 
 class ProductController extends Controller
 {
+    // public function index(Request $request)
+    // {
+    //     $query = Product::with(['images', 'category']);
+
+    //     if ($request->has('search')) {
+    //         $search = $request->input('search');
+    //         $query->where(function ($q) use ($search) {
+    //             $q->where('name', 'LIKE', "%$search%")
+    //               ->orWhere('description', 'LIKE', "%$search%");
+    //         });
+    //     }
+
+    //     if ($request->has('categories')) {
+    //         $categories = explode(',', $request->input('categories'));
+    //         $query->whereIn('category_id', $categories);
+    //     }
+
+    //     if ($request->has('minPrice') && $request->has('maxPrice')) {
+    //         $minPrice = $request->input('minPrice');
+    //         $maxPrice = $request->input('maxPrice');
+    //         $query->whereBetween('price', [$minPrice, $maxPrice]);
+    //     }
+
+    //     $page = $request->input('page', 1);
+    //     $perPage = $request->input('perPage', 12);
+    //     $products = $query->paginate($perPage, ['*'], 'page', $page);
+
+    //     return response()->json($products);
+    // }
     public function index(Request $request)
-    {
-        $products = Product::with(['images', 'category'])->paginate(10);
-        return response()->json($products);
+{
+    $query = Product::with(['images', 'category']);
+
+    if ($request->has('search')) {
+        $search = $request->input('search');
+        $query->where(function ($q) use ($search) {
+            $q->where('name', 'LIKE', "%$search%")
+              ->orWhere('description', 'LIKE', "%$search%");
+        });
     }
+
+    if ($request->has('categories') && !empty($request->input('categories'))) {
+        $categories = explode(',', $request->input('categories'));
+        $query->whereHas('category', function ($q) use ($categories) {
+            $q->whereIn('name', $categories);
+        });
+    }
+
+    if ($request->has('minPrice') && $request->has('maxPrice')) {
+        $minPrice = $request->input('minPrice');
+        $maxPrice = $request->input('maxPrice');
+        $query->whereBetween('price', [$minPrice, $maxPrice]);
+    }
+
+    $page = $request->input('page', 1);
+    $perPage = $request->input('perPage', 12);
+    $products = $query->paginate($perPage, ['*'], 'page', $page);
+
+    return response()->json($products);
+}
  
     public function show($id)
     {
