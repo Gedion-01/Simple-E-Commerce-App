@@ -1,4 +1,4 @@
-import { getProducts } from "../../lib/api";
+import { getProducts } from "@/lib/products_handler";
 import { PaginatedProducts } from "../../types";
 import FilterSidebar from "./_components/filter-sidebar";
 import ProductList from "./_components/product-list";
@@ -82,7 +82,10 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
       </div>
     );
   }
-
+  console.log(
+    "process.env.NEXT_PUBLIC_API_BASE_URL",
+    process.env.NEXT_PUBLIC_API_BASE_URL
+  );
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Shop</h1>

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { HeroSection } from "@/components/hero-section";
 import { Categories } from "@/components/categories-section";
 import { FearuredProducts } from "@/components/featured-products";
-import { getFeaturedProducts } from "@/lib/api";
+import { getFeaturedProducts } from "@/lib/products_handler";
 
 export default async function Home() {
   const featuredProducts = await getFeaturedProducts();

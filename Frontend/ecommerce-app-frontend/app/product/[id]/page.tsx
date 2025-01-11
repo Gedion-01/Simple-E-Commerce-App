@@ -1,4 +1,4 @@
-import { getProduct, getRelatedProducts } from "@/lib/api";
+import { getProduct, getRelatedProducts } from "@/lib/products_handler";
 import { Product } from "./_components/product";
 
 export default async function ProductPage({

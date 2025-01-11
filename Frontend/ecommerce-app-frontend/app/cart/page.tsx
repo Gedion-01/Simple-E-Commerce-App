@@ -5,9 +5,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Plus, Minus, Trash2 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { useRouter } from "next/navigation";
 
 export default function Cart() {
   const { cartItems, updateQuantity, removeItem, total } = useCart();
+  const router = useRouter();
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -78,7 +80,12 @@ export default function Cart() {
                 <span>Total:</span>
                 <span>${total.toFixed(2)}</span>
               </div>
-              <Button className="w-full mt-6">Proceed to Checkout</Button>
+              <Button
+                className="w-full mt-6"
+                onClick={() => router.push("/checkout")}
+              >
+                Proceed to Checkout
+              </Button>
             </div>
           </div>
         </div>

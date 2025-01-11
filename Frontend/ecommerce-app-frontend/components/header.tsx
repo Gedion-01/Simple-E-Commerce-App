@@ -1,11 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart, Menu, X } from "lucide-react";
+import { useState } from "react";
+import { ShoppingCart, Menu, X, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/CartContext";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { logoutUser } from "@/lib/auth_handler";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,6 +23,14 @@ function Header() {
     (count, item) => count + item.quantity,
     0
   );
+  const router = useRouter();
+  const { isAuthenticated, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+    router.refresh();
+  };
 
   return (
     <header className="bg-white shadow-md">
@@ -37,7 +54,7 @@ function Header() {
             href="/cart"
             className="text-gray-600 hover:text-primary relative"
           >
-            <ShoppingCart />
+            <ShoppingCart className="h-8" />
             {cartItemsCount > 0 && (
               <Badge
                 variant="destructive"
@@ -47,6 +64,31 @@ function Header() {
               </Badge>
             )}
           </Link>
+          {isAuthenticated && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="text-gray-600 hover:text-primary">
+                  <User className="h-8" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48">
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/profile"
+                    className="block px-4 py-2 text-gray-600 hover:bg-gray-100"
+                  >
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleLogout}
+                  className="block w-full text-left px-4 py-2 text-gray-600 hover:bg-gray-100"
+                >
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
           <button
             className="md:hidden text-gray-600 hover:text-primary"
             onClick={() => setIsOpen(!isOpen)}
