@@ -1,7 +1,7 @@
 "use client";
 
 import { z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,6 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { CreditCard, Truck } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { placeOrder } from "@/lib/orders_handler";
+import Confetti from "react-confetti";
 
 export const shippingSchema = z.object({
   fullName: z.string().min(2, "Full name is required"),
@@ -24,7 +26,36 @@ type ShippingFormData = z.infer<typeof shippingSchema>;
 
 export default function CheckoutPage() {
   const [step, setStep] = useState(1);
-  const { cartItems, total } = useCart();
+  const { cartItems, total, clearCart } = useCart();
+  const [loading, setLoading] = useState(false);
+  const [orderId, setOrderId] = useState<null | string>(null);
+  const [confettiVisible, setConfettiVisible] = useState(false);
+  const [windowDimensions, setWindowDimensions] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (confettiVisible) {
+      const timer = setTimeout(() => {
+        setConfettiVisible(false);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [confettiVisible]);
 
   const shippingForm = useForm<ShippingFormData>({
     resolver: zodResolver(shippingSchema),
@@ -35,9 +66,32 @@ export default function CheckoutPage() {
     setStep(2);
   };
 
-  const onSubmit: SubmitHandler<ShippingFormData> = (data) => {
-    console.log(data);
-    setStep(3);
+  const onSubmit: SubmitHandler<ShippingFormData> = async (data) => {
+    try {
+      setLoading(true);
+      const orderData = {
+        full_name: data.fullName,
+        email: data.email,
+        address: data.address,
+        city: data.city,
+        zip_code: data.zipCode,
+        products: cartItems.map((item) => ({
+          id: item.id,
+          quantity: item.quantity,
+        })),
+      };
+
+      const response = await placeOrder(orderData);
+      console.log("Order placed successfully", response);
+      setOrderId(response.order.id);
+      clearCart();
+      setStep(2);
+      setConfettiVisible(true);
+    } catch (error) {
+      console.error("Error placing order", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,7 +110,7 @@ export default function CheckoutPage() {
                 Shipping Information
               </h2>
               <form
-                onSubmit={shippingForm.handleSubmit(handleNextStep)}
+                onSubmit={shippingForm.handleSubmit(onSubmit)}
                 className="space-y-4"
               >
                 <div>
@@ -110,7 +164,7 @@ export default function CheckoutPage() {
                     )}
                   </div>
                 </div>
-                <Button type="submit" className="w-full">
+                <Button type="submit" disabled={loading} className="w-full">
                   Continue to Payment
                 </Button>
               </form>
@@ -123,6 +177,12 @@ export default function CheckoutPage() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
             >
+              {confettiVisible && (
+                <Confetti
+                  width={windowDimensions.width}
+                  height={windowDimensions.height}
+                />
+              )}
               <h2 className="text-2xl font-semibold mb-4 text-green-600">
                 Order Confirmed!
               </h2>
@@ -131,7 +191,10 @@ export default function CheckoutPage() {
                 being processed.
               </p>
               <p className="text-gray-600 mb-4">
-                Order number: <span className="font-semibold">#12345</span>
+                Order number:{" "}
+                <span className="font-semibold">
+                  #{orderId != null ? orderId : ""}
+                </span>
               </p>
               <Button
                 onClick={() => (window.location.href = "/orders")}

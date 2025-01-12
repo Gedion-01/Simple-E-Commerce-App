@@ -30,12 +30,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
         <AuthProvider>
           <CartProvider>
             <Header />
-            <main>{children}</main>
+            <main className="flex-grow">{children}</main>
             <Footer />
           </CartProvider>
         </AuthProvider>

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
   
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login'])->name('login');
@@ -23,4 +24,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('products', [ProductController::class, 'store'])->middleware('checkRole:admin,vendor');
     Route::put('products/{id}', [ProductController::class, 'update'])->middleware('checkRole:admin,vendor');
     Route::delete('products/{id}', [ProductController::class, 'destroy'])->middleware('checkRole:admin,vendor');
+    // Order routes
+    Route::post('orders', [OrderController::class, 'store']);
+    Route::get('orders/user', [OrderController::class, 'listByUser']);
+    Route::get('orders/{id}', [OrderController::class, 'show']);
+    Route::put('orders/{id}/status', [OrderController::class, 'updateStatus'])->middleware('checkRole:admin,vendor');
 });
