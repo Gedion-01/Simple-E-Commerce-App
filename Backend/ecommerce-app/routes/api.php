@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\AdminController;
   
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login'])->name('login');
@@ -32,4 +33,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('orders/{id}', [OrderController::class, 'show']);
     Route::put('orders/{id}/status', [OrderController::class, 'updateStatus'])->middleware('checkRole:admin,vendor');
     Route::get('orders/{id}/details', [OrderController::class, 'showOrderDetails'])->middleware('checkRole:admin');
+    // Admin dashboard data route
+    Route::get('admin/dashboard-data', [AdminController::class, 'getDashboardData'])->middleware('checkRole:admin');
 });
