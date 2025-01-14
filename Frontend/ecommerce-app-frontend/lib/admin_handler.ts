@@ -4,8 +4,8 @@ import clientApi from "./clientApi";
 interface ProductData {
   name: string;
   description: string;
-  price: number;
-  quantity: number;
+  price: string;
+  quantity: string;
   category_id: number;
   image_url?: string;
   image_urls?: string[];
@@ -51,14 +51,14 @@ export async function fetchOrders(page: number = 1) {
   }
 }
 
-export async function updateOrderStatus(id: number, status: string) {
-  try {
-    const response = await clientApi.put(`/orders/${id}/status`, { status });
-    return response.data;
-  } catch (error) {
-    console.error("Error updating order status", error);
-    throw error;
-  }
+export async function fetchOrderDetails(orderId: number) {
+  const response = await clientApi.get(`/orders/${orderId}/details`);
+  return response.data;
+}
+
+export async function updateOrderStatus(orderId: number, status: string) {
+  const response = await clientApi.put(`/orders/${orderId}/status`, { status });
+  return response.data;
 }
 
 interface GetProductsParams {

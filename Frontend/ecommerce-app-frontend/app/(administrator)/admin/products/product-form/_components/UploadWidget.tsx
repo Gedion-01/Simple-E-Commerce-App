@@ -4,9 +4,18 @@ import { Upload } from "lucide-react";
 
 interface UploadWidgetProps {
   onUploadSuccess: (result: any) => void;
+  options?: {
+    cloudName?: string;
+    uploadPreset?: string;
+    sources?: ("local" | "camera")[];
+    multiple?: boolean;
+    maxFiles?: number;
+    clientAllowedFormats?: string[];
+    allowedFormats?: string[];
+  };
 }
 
-const uploadOptions = {
+const defaultOptions = {
   cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   uploadPreset: "ecommerce",
   sources: ["local", "camera"] as ("local" | "camera")[],
@@ -16,11 +25,13 @@ const uploadOptions = {
   allowedFormats: ["jpg", "png", "gif"],
 };
 
-const UploadWidget: React.FC<UploadWidgetProps> = ({ onUploadSuccess }) => {
+function UploadWidget({ onUploadSuccess, options = {} }: UploadWidgetProps) {
+  const uploadOptions = { ...defaultOptions, ...options };
+
   return (
     <CldUploadWidget
       uploadPreset={uploadOptions.uploadPreset}
-      onUpload={onUploadSuccess}
+      onSuccess={onUploadSuccess}
       options={uploadOptions}
     >
       {({ open }) => (
@@ -35,6 +46,6 @@ const UploadWidget: React.FC<UploadWidgetProps> = ({ onUploadSuccess }) => {
       )}
     </CldUploadWidget>
   );
-};
+}
 
 export default UploadWidget;

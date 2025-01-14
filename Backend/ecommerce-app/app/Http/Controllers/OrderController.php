@@ -80,4 +80,19 @@ class OrderController extends Controller
             'order' => $order,
         ]);
     }
+
+  public function listAllOrders(): JsonResponse
+    {
+        $orders = Order::with('products')->paginate(10);
+
+        return response()->json($orders);
+    }
+
+    // New method to show order details
+    public function showOrderDetails($id): JsonResponse
+    {
+        $order = Order::with('products')->findOrFail($id);
+
+        return response()->json($order);
+    }
 }

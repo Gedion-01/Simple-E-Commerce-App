@@ -22,7 +22,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const login = (token: string) => {
-    Cookies.set("token", token);
+    // Cookies.set("token", token);
     setIsAuthenticated(true);
   };
 

@@ -2,12 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import {
-  createProduct,
-  updateProduct,
-  deleteProduct,
-  adminGetProducts,
-} from "@/lib/admin_handler";
+import { deleteProduct, adminGetProducts } from "@/lib/admin_handler";
 import { Search, Plus, Pencil, Trash } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -90,12 +85,11 @@ export default function AdminProductsPage() {
   };
 
   const openEditPage = (product: Product) => {
-    router.push(`/admin/product-form?id=${product.id}`);
+    router.push(`/admin/products/product-form?id=${product.id}`);
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Admin Products Page</h1>
       <div className="flex justify-between items-center mb-6">
         <div className="relative w-full max-w-sm">
           <Search

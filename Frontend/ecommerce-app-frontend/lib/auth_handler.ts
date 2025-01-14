@@ -21,12 +21,13 @@ export async function registerUser(user: User) {
 export async function loginUser(email: string, password: string) {
   try {
     const response = await clientApi.post("/login", { email, password });
+    console.log("response", response.data.token);
     Cookies.set("token", response.data.token, {
       expires: 7, // 7 days
       //   secure: true, // Ensures the browser only sends the cookie over HTTPS
       sameSite: "strict", // Helps protect against CSRF attacks
     });
-    return response.data.token;
+    return response.data;
   } catch (error) {
     console.error("Error logging in user", error);
     throw error;

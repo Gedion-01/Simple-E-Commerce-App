@@ -22,4 +22,21 @@ clientApi.interceptors.request.use(
   }
 );
 
+clientApi.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      Cookies.remove("token");
+      console.log("removed token");
+
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+    }
+    return new Promise(() => {});
+  }
+);
+
 export default clientApi;

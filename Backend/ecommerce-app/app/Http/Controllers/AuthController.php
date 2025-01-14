@@ -46,8 +46,9 @@ class AuthController extends Controller
 
         $user = Auth::user();
         $token = $user->createToken('authToken')->plainTextToken;
+        $role = $user->roles->first()->name;
 
-        return response()->json(['token' => $token], 200);
+        return response()->json(['token' => $token,'role' => $role], 200);
     }
     public function logout(Request $request)
     {
@@ -59,5 +60,18 @@ class AuthController extends Controller
         }
 
         return response()->json(['message' => 'No authenticated user'], 401);
+    }
+
+    public function getUserRole(Request $request)
+    {
+       $user = Auth::guard('sanctum')->user();
+
+        if (!$user) {
+            return response()->json(['message' => 'No authenticated user'], 401);
+        }
+
+        $role = $user->roles->first()->name;
+        return response()->json(['role' => $role], 200);
+
     }
 }

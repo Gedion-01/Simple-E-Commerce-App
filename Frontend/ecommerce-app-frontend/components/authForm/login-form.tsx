@@ -22,9 +22,17 @@ function LoginForm() {
     setLoading(true);
     setError(null);
     try {
-      const tokken = await loginUser(email, password);
+      const response = await loginUser(email, password);
+      const { tokken, role } = response;
+      console.log(response);
+      console.log(role);
       login(tokken);
-      router.push("/protected");
+
+      if (role == "admin") {
+        router.push("/admin/dashboard");
+      } else {
+        router.push("/protected");
+      }
     } catch (err: any) {
       setError(err?.response?.data?.message || "Invalid credentials");
     } finally {
