@@ -13,11 +13,22 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
+import { z } from "zod";
 import UploadWidget from "./_components/UploadWidget";
 import ImagePreview from "./_components/ImagePreview";
 import { Trash, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+export const productSchema = z.object({
+  id: z.number().optional(),
+  name: z.string().min(1, "Name is required"),
+  description: z.string().min(1, "Description is required"),
+  price: z.string().min(1, "Price is required"),
+  quantity: z.string().min(1, "Quantity is required"),
+  category_id: z.number().min(1, "Category ID is required"),
+  image_url: z.string().url("Invalid URL").optional(),
+  image_urls: z.array(z.string().url("Invalid URL")).optional(),
+});
 
 interface Product {
   id: number;
@@ -65,7 +76,7 @@ export default function ProductFormPage() {
         name: product.name,
         description: product.description,
         price: product.price,
-        quantity: product.quantity,
+        quantity: product.quantity.toString(),
         category_id: product.category_id,
         image_url: product.image_url,
         image_urls: product.images.map((image: any) => image.image_url),
@@ -92,6 +103,10 @@ export default function ProductFormPage() {
   const handleSaveProduct = async () => {
     try {
       setIsLoading(true);
+
+      // Validate product data
+      productSchema.parse(productData);
+
       if (id) {
         await updateProduct(productData.id, productData);
         toast.toast({
@@ -108,11 +123,19 @@ export default function ProductFormPage() {
       router.push("/admin/products");
     } catch (error) {
       console.error("Error saving product", error);
-      toast.toast({
-        title: "Error",
-        description: "Failed to save product.",
-        variant: "destructive",
-      });
+      if (error instanceof z.ZodError) {
+        toast.toast({
+          title: "Validation Error",
+          description: error.errors.map((err) => err.message).join(", "),
+          variant: "destructive",
+        });
+      } else {
+        toast.toast({
+          title: "Error",
+          description: "Failed to save product.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -232,8 +255,9 @@ export default function ProductFormPage() {
               <div className="grid gap-6">
                 <div>
                   <h3 className="text-lg font-semibold mb-2">Main Image</h3>
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-col items-start gap-4">
                     <UploadWidget
+                      buttonName="Upload Main Image"
                       onUploadSuccess={handleMainImageUploadSuccess}
                     />
                     {productData.image_url && (

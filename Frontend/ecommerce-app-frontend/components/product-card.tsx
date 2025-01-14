@@ -26,7 +26,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           alt={product.name}
           width={300}
           height={200}
-          className="w-full h-48 object-cover"
+          className="w-full h-[300px] object-cover"
         />
         <div className="p-4">
           <h3 className="text-lg font-semibold mb-2">{product.name}</h3>

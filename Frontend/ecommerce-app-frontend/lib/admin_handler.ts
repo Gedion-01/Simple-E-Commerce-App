@@ -103,3 +103,9 @@ export async function adminGetProduct(id: number) {
     throw error;
   }
 }
+
+export async function getAdminDashboardData() {
+  const response = await clientApi.get("/admin/dashboard-data");
+  console.log(response.data);
+  return response.data;
+}

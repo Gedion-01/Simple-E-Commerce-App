@@ -11,6 +11,7 @@ import { useCart } from "@/contexts/CartContext";
 interface Product {
   id: number;
   name: string;
+  image_url: string;
   price: number;
   description: string;
   images: {
@@ -74,31 +75,34 @@ export const Product: React.FC<ProductClientProps> = ({
             className="mb-4"
           >
             <Image
-              src={product.images[selectedImage].image_url}
+              src={product.image_url}
               alt={product.name}
-              width={600}
-              height={400}
-              className="w-full h-auto rounded-lg shadow-lg"
+              height={500}
+              width={500}
+              className="w-full h-[500px] rounded-lg shadow-lg"
             />
           </motion.div>
           <div className="flex space-x-4">
-            {product.images.map((image, index) => (
-              <button
-                key={index}
-                onClick={() => setSelectedImage(index)}
-                className={`border-2 rounded-lg overflow-hidden ${
-                  selectedImage === index ? "border-primary" : "border-gray-200"
-                }`}
-              >
-                <Image
-                  src={image.image_url}
-                  alt={`${product.name} thumbnail ${index + 1}`}
-                  width={100}
-                  height={100}
-                  className="w-20 h-20 object-cover"
-                />
-              </button>
-            ))}
+            {product &&
+              product.images.map((image, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedImage(index)}
+                  className={`border-2 rounded-lg overflow-hidden ${
+                    selectedImage === index
+                      ? "border-primary"
+                      : "border-gray-200"
+                  }`}
+                >
+                  <Image
+                    src={image.image_url}
+                    alt={`${product.name} thumbnail ${index + 1}`}
+                    width={100}
+                    height={100}
+                    className="w-20 h-20 object-cover"
+                  />
+                </button>
+              ))}
           </div>
         </div>
         <div>

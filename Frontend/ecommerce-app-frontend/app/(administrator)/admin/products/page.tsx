@@ -44,10 +44,12 @@ export default function AdminProductsPage() {
   const [error, setError] = useState("");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     setFilteredProducts(
@@ -61,8 +63,14 @@ export default function AdminProductsPage() {
     setIsLoading(true);
     setError("");
     try {
-      const data = await adminGetProducts({});
-      setProducts(data.data);
+      const data = await adminGetProducts({ page: currentPage });
+      setProducts(
+        data.data.map((product: any) => ({
+          ...product,
+          image_urls: product.image_urls || [],
+        }))
+      );
+      setTotalPages(data.last_page);
     } catch (error) {
       setError("Error fetching products. Please try again.");
       console.error("Error fetching products", error);
@@ -88,6 +96,12 @@ export default function AdminProductsPage() {
     router.push(`/admin/products/product-form?id=${product.id}`);
   };
 
+  const handlePageChange = (newPage: number) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
@@ -104,7 +118,7 @@ export default function AdminProductsPage() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <Button onClick={() => router.push("/admin/product-form")}>
+        <Button onClick={() => router.push("/admin/products/product-form")}>
           <Plus className="mr-2 h-4 w-4" /> Add Product
         </Button>
       </div>
@@ -113,48 +127,65 @@ export default function AdminProductsPage() {
       ) : error ? (
         <div className="text-center text-red-500">{error}</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProducts.map((product) => (
-            <Card key={product.id}>
-              <CardHeader>
-                <CardTitle>{product.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <img
-                  src={product.image_url || "/placeholder.png"}
-                  alt={product.name}
-                  className="w-full h-48 object-cover rounded-md mb-4"
-                />
-                <p className="text-sm text-gray-600 mb-2">
-                  {product.description}
-                </p>
-                <p className="text-lg font-bold mb-2">${product.price}</p>
-                <p className="text-sm text-gray-500">
-                  Quantity: {product.quantity}
-                </p>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => openEditPage(product)}
-                >
-                  <Pencil className="mr-2 h-4 w-4" /> Edit
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => {
-                    setSelectedProduct(product);
-                    setIsDeleteDialogOpen(true);
-                  }}
-                >
-                  <Trash className="mr-2 h-4 w-4" /> Delete
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProducts.map((product) => (
+              <Card key={product.id}>
+                <CardHeader>
+                  <CardTitle>{product.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <img
+                    src={product.image_url || "/placeholder.png"}
+                    alt={product.name}
+                    className="w-full h-48 object-cover rounded-md mb-4"
+                  />
+                  <p className="text-sm text-gray-600 mb-2">
+                    {product.description}
+                  </p>
+                  <p className="text-lg font-bold mb-2">${product.price}</p>
+                  <p className="text-sm text-gray-500">
+                    Quantity: {product.quantity}
+                  </p>
+                </CardContent>
+                <CardFooter className="flex justify-between">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => openEditPage(product)}
+                  >
+                    <Pencil className="mr-2 h-4 w-4" /> Edit
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedProduct(product);
+                      setIsDeleteDialogOpen(true);
+                    }}
+                  >
+                    <Trash className="mr-2 h-4 w-4" /> Delete
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+          <div className="mt-6 flex justify-center">
+            <Button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="mr-2"
+            >
+              Previous
+            </Button>
+            <Button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
+          </div>
+        </>
       )}
 
       <AlertDialog

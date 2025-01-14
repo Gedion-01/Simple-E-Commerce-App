@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
+import Image from "next/image";
 
 interface ImagePreviewProps {
   src: string;
@@ -14,10 +15,12 @@ export default function ImagePreview({
 }: ImagePreviewProps) {
   return (
     <div className="relative group">
-      <img
+      <Image
         src={src}
         alt={alt}
-        className="w-full h-32 object-cover rounded-md"
+        width={500}
+        height={600}
+        className="w-full h-[200px] object-cover rounded-md"
       />
       <Button
         variant="destructive"

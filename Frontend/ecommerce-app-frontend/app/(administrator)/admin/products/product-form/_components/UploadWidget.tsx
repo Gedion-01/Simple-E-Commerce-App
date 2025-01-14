@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
 
 interface UploadWidgetProps {
+  buttonName?: string;
   onUploadSuccess: (result: any) => void;
   options?: {
     cloudName?: string;
@@ -16,6 +17,7 @@ interface UploadWidgetProps {
 }
 
 const defaultOptions = {
+  buttonName: "Upload Images",
   cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   uploadPreset: "ecommerce",
   sources: ["local", "camera"] as ("local" | "camera")[],
@@ -25,7 +27,11 @@ const defaultOptions = {
   allowedFormats: ["jpg", "png", "gif"],
 };
 
-function UploadWidget({ onUploadSuccess, options = {} }: UploadWidgetProps) {
+function UploadWidget({
+  onUploadSuccess,
+  options = {},
+  buttonName,
+}: UploadWidgetProps) {
   const uploadOptions = { ...defaultOptions, ...options };
 
   return (
@@ -41,7 +47,8 @@ function UploadWidget({ onUploadSuccess, options = {} }: UploadWidgetProps) {
           onClick={() => open()}
           className="relative"
         >
-          <Upload className="mr-2 h-4 w-4" /> Upload Images
+          <Upload className="mr-2 h-4 w-4" />{" "}
+          {buttonName || uploadOptions.buttonName}
         </Button>
       )}
     </CldUploadWidget>
