@@ -6,9 +6,8 @@ import { useState } from "react";
 import { ShoppingCart, Menu, X, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/CartContext";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { logoutUser } from "@/lib/auth_handler";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,6 +23,7 @@ function Header() {
     0
   );
   const router = useRouter();
+  const pathname = usePathname();
   const { isAuthenticated, logout } = useAuth();
 
   const handleLogout = () => {
@@ -32,21 +32,27 @@ function Header() {
     router.refresh();
   };
 
+  const getLinkClass = (path: string) => {
+    return pathname === path
+      ? "text-primary font-bold"
+      : "text-gray-600 hover:text-primary";
+  };
+
   return (
     <header className="bg-white shadow-md">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-2xl font-bold text-primary">
-          AmazingShop
+          ShopHaven
         </Link>
         <div className="hidden md:flex space-x-4">
-          <Link href="/" className="text-gray-600 hover:text-primary">
+          <Link href="/" className={getLinkClass("/")}>
             Home
           </Link>
-          <Link href="/shop" className="text-gray-600 hover:text-primary">
+          <Link href="/shop" className={getLinkClass("/shop")}>
             Shop
           </Link>
-          <Link href="/categories" className="text-gray-600 hover:text-primary">
-            Categories
+          <Link href="/orders" className={getLinkClass("/orders")}>
+            Orders
           </Link>
         </div>
         <div className="flex items-center space-x-4">
@@ -104,23 +110,20 @@ function Header() {
           exit={{ opacity: 0, y: -20 }}
           className="md:hidden bg-white shadow-md py-2"
         >
-          <Link
-            href="/"
-            className="block px-4 py-2 text-gray-600 hover:bg-gray-100"
-          >
+          <Link href="/" className={`block px-4 py-2 ${getLinkClass("/")}`}>
             Home
           </Link>
           <Link
             href="/shop"
-            className="block px-4 py-2 text-gray-600 hover:bg-gray-100"
+            className={`block px-4 py-2 ${getLinkClass("/shop")}`}
           >
             Shop
           </Link>
           <Link
-            href="/categories"
-            className="block px-4 py-2 text-gray-600 hover:bg-gray-100"
+            href="/orders"
+            className={`block px-4 py-2 ${getLinkClass("/orders")}`}
           >
-            Categories
+            Orders
           </Link>
         </motion.div>
       )}

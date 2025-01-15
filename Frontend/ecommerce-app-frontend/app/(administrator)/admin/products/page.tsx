@@ -140,9 +140,9 @@ export default function AdminProductsPage() {
                     alt={product.name}
                     className="w-full h-48 object-cover rounded-md mb-4"
                   />
-                  <p className="text-sm text-gray-600 mb-2">
+                  {/* <p className="text-sm text-gray-600 mb-2">
                     {product.description}
-                  </p>
+                  </p> */}
                   <p className="text-lg font-bold mb-2">${product.price}</p>
                   <p className="text-sm text-gray-500">
                     Quantity: {product.quantity}

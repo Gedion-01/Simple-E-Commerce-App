@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth' => \App\Http\Middleware\Authenticate::class,
             'checkRole' => \App\Http\Middleware\CheckRole::class,
         ]);
+
+        // $middleware->global([
+        //     \App\Http\Middleware\CorsMiddleware::class, // Add CORS middleware to global middleware stack
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

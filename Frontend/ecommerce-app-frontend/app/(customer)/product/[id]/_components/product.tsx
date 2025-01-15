@@ -64,6 +64,11 @@ export const Product: React.FC<ProductClientProps> = ({
     }
   };
 
+  const combinedImages = [
+    { id: 0, image_url: product.image_url },
+    ...product.images,
+  ];
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
@@ -75,7 +80,7 @@ export const Product: React.FC<ProductClientProps> = ({
             className="mb-4"
           >
             <Image
-              src={product.image_url}
+              src={combinedImages[selectedImage]?.image_url}
               alt={product.name}
               height={500}
               width={500}
@@ -83,26 +88,23 @@ export const Product: React.FC<ProductClientProps> = ({
             />
           </motion.div>
           <div className="flex space-x-4">
-            {product &&
-              product.images.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImage(index)}
-                  className={`border-2 rounded-lg overflow-hidden ${
-                    selectedImage === index
-                      ? "border-primary"
-                      : "border-gray-200"
-                  }`}
-                >
-                  <Image
-                    src={image.image_url}
-                    alt={`${product.name} thumbnail ${index + 1}`}
-                    width={100}
-                    height={100}
-                    className="w-20 h-20 object-cover"
-                  />
-                </button>
-              ))}
+            {combinedImages.map((image, index) => (
+              <button
+                key={index}
+                onClick={() => setSelectedImage(index)}
+                className={`border-2 rounded-lg overflow-hidden ${
+                  selectedImage === index ? "border-primary" : "border-gray-200"
+                }`}
+              >
+                <Image
+                  src={image.image_url}
+                  alt={`${product.name} thumbnail ${index + 1}`}
+                  width={100}
+                  height={100}
+                  className="w-20 h-20 object-cover"
+                />
+              </button>
+            ))}
           </div>
         </div>
         <div>
@@ -141,7 +143,7 @@ export const Product: React.FC<ProductClientProps> = ({
                   name: product.name,
                   price: product.price,
                   quantity,
-                  image: product.images[0].image_url,
+                  image: product.image_url,
                 });
               }}
             >

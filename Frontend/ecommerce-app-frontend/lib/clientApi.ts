@@ -27,15 +27,20 @@ clientApi.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response && error.response.status === 401) {
+    if (
+      error.response &&
+      error.response.data.message == "Unauthorized" &&
+      error.response.status === 401
+    ) {
       Cookies.remove("token");
       console.log("removed token");
 
       if (typeof window !== "undefined") {
         window.location.href = "/login";
       }
+      return Promise.reject(() => {});
     }
-    return new Promise(() => {});
+    return Promise.reject(error);
   }
 );
 

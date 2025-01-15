@@ -20,7 +20,7 @@ const defaultOptions = {
   buttonName: "Upload Images",
   cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   uploadPreset: "ecommerce",
-  sources: ["local", "camera"] as ("local" | "camera")[],
+  sources: ["local", "camera", "url"] as ("local" | "camera" | "url")[],
   multiple: false,
   maxFiles: 1,
   clientAllowedFormats: ["image"],

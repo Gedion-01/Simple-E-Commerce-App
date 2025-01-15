@@ -107,11 +107,12 @@ class ProductController extends Controller
             'image_urls' => 'sometimes|array',
             'image_urls.*' => 'sometimes|url',
             'image_url' => 'url|nullable',
+            'is_featured' => 'sometimes|boolean',
         ]);
 
         $product = Product::findOrFail($id);
 
-        $product->update($request->only(['name', 'description', 'price', 'quantity', 'category_id', 'image_url']));
+        $product->update($request->only(['name', 'description', 'price', 'quantity', 'category_id', 'image_url', 'is_featured']));
 
         if ($request->has('image_urls')) {
             $product->images()->delete();
@@ -153,10 +154,7 @@ class ProductController extends Controller
     }
     public function getFeaturedProducts()
     {
-        $featuredProducts = Product::where('is_featured', 1)
-            ->take(4)
-            ->get();
-        
+        $featuredProducts = Product::where('is_featured', 1)->take(4)->get();
 
         return response()->json($featuredProducts);
     }

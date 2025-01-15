@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, User } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
@@ -15,12 +15,19 @@ import {
 function AdminHeader() {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const { isAuthenticated, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
     router.push("/login");
     router.refresh();
+  };
+
+  const getLinkClass = (path: string) => {
+    return pathname === path
+      ? "text-primary font-bold"
+      : "text-gray-600 hover:text-primary";
   };
 
   return (
@@ -35,14 +42,11 @@ function AdminHeader() {
         <div className="hidden md:flex space-x-4">
           <Link
             href="/admin/products"
-            className="text-gray-600 hover:text-primary"
+            className={getLinkClass("/admin/products")}
           >
             Products
           </Link>
-          <Link
-            href="/admin/orders"
-            className="text-gray-600 hover:text-primary"
-          >
+          <Link href="/admin/orders" className={getLinkClass("/admin/orders")}>
             Orders
           </Link>
         </div>
@@ -84,19 +88,19 @@ function AdminHeader() {
         <div className="md:hidden bg-white shadow-md py-2">
           <Link
             href="/admin/dashboard"
-            className="block px-4 py-2 text-gray-600 hover:bg-gray-100"
+            className={`block px-4 py-2 ${getLinkClass("/admin/dashboard")}`}
           >
             Dashboard
           </Link>
           <Link
             href="/admin/products"
-            className="block px-4 py-2 text-gray-600 hover:bg-gray-100"
+            className={`block px-4 py-2 ${getLinkClass("/admin/products")}`}
           >
             Products
           </Link>
           <Link
             href="/admin/orders"
-            className="block px-4 py-2 text-gray-600 hover:bg-gray-100"
+            className={`block px-4 py-2 ${getLinkClass("/admin/orders")}`}
           >
             Orders
           </Link>

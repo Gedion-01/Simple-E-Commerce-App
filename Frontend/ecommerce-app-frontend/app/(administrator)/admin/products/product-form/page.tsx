@@ -16,7 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { z } from "zod";
 import UploadWidget from "./_components/UploadWidget";
 import ImagePreview from "./_components/ImagePreview";
-import { Trash, Loader2 } from "lucide-react";
+import { Trash, Loader2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export const productSchema = z.object({
@@ -28,6 +28,7 @@ export const productSchema = z.object({
   category_id: z.number().min(1, "Category ID is required"),
   image_url: z.string().url("Invalid URL").optional(),
   image_urls: z.array(z.string().url("Invalid URL")).optional(),
+  is_featured: z.boolean().optional(),
 });
 
 interface Product {
@@ -39,6 +40,7 @@ interface Product {
   category_id: number;
   image_url: string;
   image_urls: string[];
+  is_featured: boolean;
 }
 
 export default function ProductFormPage() {
@@ -56,6 +58,7 @@ export default function ProductFormPage() {
     category_id: 1,
     image_url: "",
     image_urls: [],
+    is_featured: false,
   });
 
   useEffect(() => {
@@ -80,6 +83,7 @@ export default function ProductFormPage() {
         category_id: product.category_id,
         image_url: product.image_url,
         image_urls: product.images.map((image: any) => image.image_url),
+        is_featured: Boolean(product.is_featured),
       });
     } catch (error) {
       console.error("Error fetching product", error);
@@ -98,6 +102,11 @@ export default function ProductFormPage() {
   ) => {
     const { name, value } = e.target;
     setProductData({ ...productData, [name]: value });
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setProductData({ ...productData, [name]: checked });
   };
 
   const handleSaveProduct = async () => {
@@ -173,9 +182,18 @@ export default function ProductFormPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">
+      <h1 className="text-3xl font-bold mb-6">
         {id ? "Edit Product" : "Add New Product"}
       </h1>
+      <div className="flex justify-between mb-6">
+        <Button
+          variant="outline"
+          onClick={() => router.push("/admin/products")}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to products
+        </Button>
+      </div>
       <Card>
         <CardContent className="p-6">
           <Tabs defaultValue="details" className="w-full">
@@ -246,6 +264,19 @@ export default function ProductFormPage() {
                     type="number"
                     value={productData.category_id}
                     onChange={handleInputChange}
+                    className="col-span-3"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="is_featured" className="text-right">
+                    Featured
+                  </Label>
+                  <Input
+                    id="is_featured"
+                    name="is_featured"
+                    type="checkbox"
+                    checked={productData.is_featured}
+                    onChange={handleCheckboxChange}
                     className="col-span-3"
                   />
                 </div>

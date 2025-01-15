@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Amazing E-commerce",
+  title: "ShopHaven",
   description: "Shop the latest trends with our amazing e-commerce platform",
 };
 
