@@ -18,6 +18,13 @@ import UploadWidget from "./_components/UploadWidget";
 import ImagePreview from "./_components/ImagePreview";
 import { Trash, Loader2, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const productSchema = z.object({
   id: z.number().optional(),
@@ -256,16 +263,32 @@ export default function ProductFormPage() {
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="category_id" className="text-right">
-                    Category ID
+                    Category
                   </Label>
-                  <Input
-                    id="category_id"
-                    name="category_id"
-                    type="number"
-                    value={productData.category_id}
-                    onChange={handleInputChange}
-                    className="col-span-3"
-                  />
+                  <Select
+                    // Convert number to string for the Select value
+                    value={String(productData.category_id)}
+                    onValueChange={(value) =>
+                      setProductData({
+                        ...productData,
+                        category_id: Number(value),
+                      })
+                    }
+                  >
+                    <SelectTrigger id="category_id" className="col-span-3">
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">Electronics</SelectItem>
+                      <SelectItem value="2">Clothing</SelectItem>
+                      <SelectItem value="3">Home &amp; Kitchen</SelectItem>
+                      <SelectItem value="4">Books</SelectItem>
+                      <SelectItem value="5">Sports &amp; Outdoors</SelectItem>
+                      <SelectItem value="6">
+                        Beauty &amp; Personal Care
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="is_featured" className="text-right">

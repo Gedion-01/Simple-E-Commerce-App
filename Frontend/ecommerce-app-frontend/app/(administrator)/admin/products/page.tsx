@@ -23,6 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import Image from "next/image";
 
 interface Product {
   id: number;
@@ -135,10 +136,12 @@ export default function AdminProductsPage() {
                   <CardTitle>{product.name}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <img
-                    src={product.image_url || "/placeholder.png"}
+                  <Image
+                    src={product.image_url}
                     alt={product.name}
-                    className="w-full h-48 object-cover rounded-md mb-4"
+                    width={300}
+                    height={200}
+                    className="w-full h-[300px] object-cover rounded-md mb-4"
                   />
                   {/* <p className="text-sm text-gray-600 mb-2">
                     {product.description}

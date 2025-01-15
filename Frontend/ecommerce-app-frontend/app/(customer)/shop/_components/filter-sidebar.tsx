@@ -67,7 +67,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       <h2 className="text-xl font-semibold mt-6 mb-2">Price Range</h2>
       <Slider
         min={0}
-        max={200}
+        max={2000}
         step={10}
         defaultValue={priceRange}
         onValueChange={(newPriceRange) =>
