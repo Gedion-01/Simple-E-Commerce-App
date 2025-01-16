@@ -47,7 +47,7 @@ function LoginForm() {
       if (role === "admin") {
         router.push("/admin/dashboard");
       } else {
-        router.push("/protected");
+        router.push("/");
       }
     } catch (err: any) {
       setError(err?.response?.data?.message || "Invalid credentials");

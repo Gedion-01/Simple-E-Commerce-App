@@ -3,11 +3,13 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { logoutUser } from "@/lib/auth_handler";
+import { useRouter } from "next/navigation";
 
 const ProtectedContent: React.FC = () => {
+  const router = useRouter();
   const handleLogout = () => {
     logoutUser();
-    window.location.href = "/login";
+    router.push("/login");
   };
 
   return (

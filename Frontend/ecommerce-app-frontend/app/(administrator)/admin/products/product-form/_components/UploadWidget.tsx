@@ -19,7 +19,7 @@ interface UploadWidgetProps {
 const defaultOptions = {
   buttonName: "Upload Images",
   cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  uploadPreset: "ecommerce",
+  uploadPreset: process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
   sources: ["local", "camera", "url"] as ("local" | "camera" | "url")[],
   multiple: false,
   maxFiles: 1,

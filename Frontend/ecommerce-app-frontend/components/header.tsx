@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ShoppingCart, Menu, X, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/contexts/CartContext";
@@ -28,7 +28,7 @@ function Header() {
 
   const handleLogout = () => {
     logout();
-    router.push("/login");
+    router.push("/");
     router.refresh();
   };
 
@@ -78,14 +78,6 @@ function Header() {
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-48">
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/profile"
-                    className="block px-4 py-2 text-gray-600 hover:bg-gray-100"
-                  >
-                    Profile
-                  </Link>
-                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={handleLogout}
                   className="block w-full text-left px-4 py-2 text-gray-600 hover:bg-gray-100"

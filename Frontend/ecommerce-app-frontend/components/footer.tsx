@@ -33,15 +33,23 @@ function Footer() {
                   My Orders
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/login"
+                  className="text-gray-600 hover:text-primary"
+                >
+                  Login
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-            <p className="text-gray-600">Email: support@amazingshop.com</p>
+            <p className="text-gray-600">Email: support@ShopHaven.com</p>
           </div>
         </div>
         <div className="mt-8 text-center text-gray-600">
-          © 2023 ShopHaven. All rights reserved.
+          © 2025 ShopHaven. All rights reserved.
         </div>
       </div>
     </footer>

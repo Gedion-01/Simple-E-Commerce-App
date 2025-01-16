@@ -17,7 +17,6 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Loader2, RefreshCw } from "lucide-react";
-import OrderDetails from "./order-details";
 import OrderDetailsPopup from "./order-details-popup";
 import { useToast } from "@/hooks/use-toast";
 
